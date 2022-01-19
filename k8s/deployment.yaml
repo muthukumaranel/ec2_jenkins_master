@@ -46,16 +46,16 @@ spec:
   apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: jenkins
-  namespace: devops
+  name: jenkins-master
+  namespace: jenkins
 spec:
   template:
     metadata:
       labels:
-        app: jenkins
+        app: jenkins-master
     spec:
       terminationGracePeriodSeconds: 10
-      serviceAccount: jenkins
+      serviceAccount: jenkins-account
       containers:
         - name: jenkins
           image: jenkins/jenkins:lts
@@ -110,13 +110,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: jenkins
-  namespace: devops
+  name: jenkins-ui
+  namespace: jenkins
   labels:
-    app: jenkins
+    app: jenkins-master
 spec:
   selector:
-    app: jenkins
+    app: jenkins-master
   type: NodePort
   ports:
     - name: web
@@ -131,7 +131,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: jenkins-ingress
-  namespace: devops
+  namespace: jenkins
 spec:
   rules:
     - host: [domain]
@@ -139,5 +139,5 @@ spec:
         paths:
           - path: /
             backend:
-              serviceName: jenkins
+              serviceName: jenkins-ui
               servicePort: web
