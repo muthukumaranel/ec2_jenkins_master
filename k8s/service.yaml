@@ -14,6 +14,7 @@ spec:
       targetPort: 8080
       nodePort: 30100
       name: ui
+    
 ---
 kind: Service
 apiVersion: v1
